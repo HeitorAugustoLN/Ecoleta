@@ -1,26 +1,26 @@
-const express = require("express");
+const express = require('express');
 const server = express();
-const database = require("./database/database");
-server.use(express.static("public"));
+const database = require('./database/database');
+server.use(express.static('public'));
 server.use(express.urlencoded({ extended: true }));
 
-const nunjucks = require("nunjucks");
-nunjucks.configure("src/views", {
+const nunjucks = require('nunjucks');
+nunjucks.configure('src/views', {
   express: server,
   noCache: true,
 });
 
-server.get("/", (req, res) => {
-  return res.render("index.html");
+server.get('/', (req, res) => {
+  return res.render('index.html');
 });
-server.get("/create-point", (req, res) => {
-  return res.render("create-point.html");
+server.get('/create-point', (req, res) => {
+  return res.render('create-point.html');
 });
-server.get("/search-results", (req, res) => {
+server.get('/search-results', (req, res) => {
   const search = req.query.search;
 
-  if (search === "") {
-    return res.render("search-results.html", { total: 0 });
+  if (search === '') {
+    return res.render('search-results.html', { total: 0 });
   }
 
   database.all(
@@ -32,15 +32,15 @@ server.get("/search-results", (req, res) => {
 
       const total = rows.length;
 
-      console.log("Aqui estão seus registros: ");
+      console.log('Aqui estão seus registros: ');
       console.log(rows);
 
-      return res.render("search-results.html", { places: rows, total });
-    }
+      return res.render('search-results.html', { places: rows, total });
+    },
   );
 });
 
-server.post("/save-point", (req, res) => {
+server.post('/save-point', (req, res) => {
   console.log(req.body);
   const query = `
     INSERT INTO places (
@@ -66,12 +66,12 @@ server.post("/save-point", (req, res) => {
   function afterInsertData(error) {
     if (error) {
       console.log(error);
-      return res.render("create-point.html", { error: true });
+      return res.render('create-point.html', { error: true });
     }
-    console.log("Cadastrado com sucesso!");
+    console.log('Cadastrado com sucesso!');
     console.log(this);
 
-    return res.render("create-point.html", { saved: true });
+    return res.render('create-point.html', { saved: true });
   }
 
   database.run(query, values, afterInsertData);

@@ -1,3 +1,3 @@
 setTimeout(function () {
-  location("/create-point");
+  location('/create-point');
 }, 2000);
